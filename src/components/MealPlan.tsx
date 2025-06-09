@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -13,6 +14,7 @@ interface CalculationResults {
   fat: number;
   cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
   language: "en" | "he";
+  isKosher: boolean;
 }
 
 interface Meal {
@@ -76,9 +78,34 @@ const MealPlan = ({ results, onBack }: MealPlanProps) => {
     }
   };
 
-  const t = translations[results.language];
+  const t = translations[results.language] || translations.en;
+  const [currentMealPlan, setCurrentMealPlan] = useState<DayPlan[]>([]);
 
-  const generateMealPlan = (cuisine: string, language: string): DayPlan[] => {
+  const filterKosherMeals = (meals: any[], isKosher: boolean) => {
+    if (!isKosher) return meals;
+    
+    const nonKosherKeywords = ['pork', 'seafood', 'bacon', 'shrimp', 'crab', 'lobster', 'clam', 'oyster', 'ham', 'חזיר', 'פירות ים', 'בייקון', 'שרימפס'];
+    
+    return meals.filter(meal => {
+      const mealName = meal.name.toLowerCase();
+      
+      // Filter out pork and seafood
+      const hasNonKosher = nonKosherKeywords.some(keyword => mealName.includes(keyword.toLowerCase()));
+      if (hasNonKosher) return false;
+      
+      // Filter out obvious meat+dairy combinations  
+      const hasMeat = mealName.includes('chicken') || mealName.includes('beef') || mealName.includes('lamb') || 
+                      mealName.includes('עוף') || mealName.includes('בקר') || mealName.includes('כבש');
+      const hasDairy = mealName.includes('cheese') || mealName.includes('milk') || mealName.includes('yogurt') ||
+                       mealName.includes('גבינה') || mealName.includes('חלב') || mealName.includes('יוגורט');
+      
+      if (hasMeat && hasDairy) return false;
+      
+      return true;
+    });
+  };
+
+  const generateMealPlan = (cuisine: string, language: string, isKosher: boolean): DayPlan[] => {
     const mealOptionsByCuisine = {
       mixed: {
         breakfast: [
@@ -322,7 +349,13 @@ const MealPlan = ({ results, onBack }: MealPlanProps) => {
     });
   };
 
-  const mealPlan = generateMealPlan(results.cuisine, results.language);
+  useEffect(() => {
+    setCurrentMealPlan(generateMealPlan(results.cuisine, results.language, results.isKosher));
+  }, [results]);
+
+  const handleShuffle = () => {
+    setCurrentMealPlan(generateMealPlan(results.cuisine, results.language, results.isKosher));
+  };
 
   const MacroBar = ({ label, value, max, color }: { label: string; value: number; max: number; color: string }) => (
     <div className="space-y-1">
@@ -411,7 +444,7 @@ const MealPlan = ({ results, onBack }: MealPlanProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {mealPlan.map((day, index) => (
+            {currentMealPlan.map((day, index) => (
               <div key={index} className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="font-semibold">
@@ -485,7 +518,7 @@ const MealPlan = ({ results, onBack }: MealPlanProps) => {
                   </div>
                 </div>
 
-                {index < mealPlan.length - 1 && <Separator />}
+                {index < currentMealPlan.length - 1 && <Separator />}
               </div>
             ))}
           </div>

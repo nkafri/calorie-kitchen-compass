@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calculator, Target, Activity } from "lucide-react";
 
 interface UserData {
@@ -18,6 +19,7 @@ interface UserData {
   weightUnit: "kg" | "lbs";
   cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
   language: "en" | "he";
+  isKosher: boolean;
 }
 
 interface CalculationResults {
@@ -29,6 +31,7 @@ interface CalculationResults {
   fat: number;
   cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
   language: "en" | "he";
+  isKosher: boolean;
 }
 
 interface FitnessCalculatorProps {
@@ -46,7 +49,8 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
     heightUnit: "cm",
     weightUnit: "kg",
     cuisine: "mixed",
-    language: "en"
+    language: "en",
+    isKosher: false
   });
 
   const calculateBMR = (height: number, weight: number, age: number, gender: string, heightUnit: string, weightUnit: string) => {
@@ -137,7 +141,8 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
       targetCalories: Math.round(targetCalories),
       ...macros,
       cuisine: userData.cuisine,
-      language: userData.language
+      language: userData.language,
+      isKosher: userData.isKosher
     };
 
     onCalculate(results);
@@ -302,6 +307,18 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
               <SelectItem value="middle-eastern">Middle Eastern</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Kosher Dietary Preference */}
+        <div className="flex items-center space-x-2">
+          <Checkbox 
+            id="kosher" 
+            checked={userData.isKosher}
+            onCheckedChange={(checked) => setUserData(prev => ({ ...prev, isKosher: checked as boolean }))}
+          />
+          <Label htmlFor="kosher" className="text-sm">
+            {userData.language === "he" ? "תזונה כשרה (ללא חזיר, פירות ים, ומניעת ערבוב בשר וחלב)" : "Kosher Diet (No pork, seafood, or mixing meat with dairy)"}
+          </Label>
         </div>
 
         <Button onClick={handleCalculate} className="w-full" size="lg">

@@ -11,6 +11,7 @@ interface CalculationResults {
   fat: number;
   cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
   language: "en" | "he";
+  isKosher: boolean;
 }
 
 const Index = () => {
