@@ -9,6 +9,8 @@ interface CalculationResults {
   protein: number;
   carbs: number;
   fat: number;
+  cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
+  language: "en" | "he";
 }
 
 const Index = () => {

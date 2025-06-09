@@ -16,6 +16,8 @@ interface UserData {
   workoutFrequency: number;
   heightUnit: "cm" | "inches";
   weightUnit: "kg" | "lbs";
+  cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
+  language: "en" | "he";
 }
 
 interface CalculationResults {
@@ -25,6 +27,8 @@ interface CalculationResults {
   protein: number;
   carbs: number;
   fat: number;
+  cuisine: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed";
+  language: "en" | "he";
 }
 
 interface FitnessCalculatorProps {
@@ -40,7 +44,9 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
     goal: "maintain",
     workoutFrequency: 3,
     heightUnit: "cm",
-    weightUnit: "kg"
+    weightUnit: "kg",
+    cuisine: "mixed",
+    language: "en"
   });
 
   const calculateBMR = (height: number, weight: number, age: number, gender: string, heightUnit: string, weightUnit: string) => {
@@ -129,7 +135,9 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
       bmr: Math.round(bmr),
       tdee: Math.round(tdee),
       targetCalories: Math.round(targetCalories),
-      ...macros
+      ...macros,
+      cuisine: userData.cuisine,
+      language: userData.language
     };
 
     onCalculate(results);
@@ -265,8 +273,39 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
           </Select>
         </div>
 
+        {/* Language */}
+        <div>
+          <Label>Language</Label>
+          <Select value={userData.language} onValueChange={(value: "en" | "he") => setUserData(prev => ({ ...prev, language: value }))}>
+            <SelectTrigger className="mt-2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="he">עברית</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Cuisine */}
+        <div>
+          <Label>Cuisine Preference</Label>
+          <Select value={userData.cuisine} onValueChange={(value: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed") => setUserData(prev => ({ ...prev, cuisine: value }))}>
+            <SelectTrigger className="mt-2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="mixed">Mixed International</SelectItem>
+              <SelectItem value="mediterranean">Mediterranean</SelectItem>
+              <SelectItem value="asian">Asian</SelectItem>
+              <SelectItem value="american">American</SelectItem>
+              <SelectItem value="middle-eastern">Middle Eastern</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <Button onClick={handleCalculate} className="w-full" size="lg">
-          Calculate & Generate Meal Plan
+          {userData.language === "he" ? "חשב וצור תכנית תזונה" : "Calculate & Generate Meal Plan"}
         </Button>
       </CardContent>
     </Card>
