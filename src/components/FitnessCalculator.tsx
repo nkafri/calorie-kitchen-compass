@@ -149,28 +149,32 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-          <Calculator className="h-6 w-6 text-primary" />
+    <Card className="w-full max-w-2xl mx-auto card-hover">
+      <CardHeader className="text-center space-y-4 pb-8">
+        <CardTitle className="flex items-center justify-center gap-3 text-3xl font-bold">
+          <Calculator className="h-7 w-7 text-primary" />
           Fitness & Nutrition Calculator
         </CardTitle>
+        <p className="text-muted-foreground text-sm">
+          Fill in your details below to get your personalized nutrition plan
+        </p>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8">
         {/* Height */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <div className="md:col-span-2">
-            <Label htmlFor="height">Height *</Label>
+            <Label htmlFor="height" className="text-sm font-medium">Height *</Label>
             <Input
               id="height"
               type="number"
               placeholder="Enter height"
               value={userData.height || ""}
               onChange={(e) => setUserData(prev => ({ ...prev, height: Number(e.target.value) }))}
+              className="mt-1.5 input-focus"
             />
           </div>
           <Select value={userData.heightUnit} onValueChange={(value: "cm" | "inches") => setUserData(prev => ({ ...prev, heightUnit: value }))}>
-            <SelectTrigger>
+            <SelectTrigger className="h-10">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -183,17 +187,18 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
         {/* Weight */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <div className="md:col-span-2">
-            <Label htmlFor="weight">Weight *</Label>
+            <Label htmlFor="weight" className="text-sm font-medium">Weight *</Label>
             <Input
               id="weight"
               type="number"
               placeholder="Enter weight"
               value={userData.weight || ""}
               onChange={(e) => setUserData(prev => ({ ...prev, weight: Number(e.target.value) }))}
+              className="mt-1.5 input-focus"
             />
           </div>
           <Select value={userData.weightUnit} onValueChange={(value: "kg" | "lbs") => setUserData(prev => ({ ...prev, weightUnit: value }))}>
-            <SelectTrigger>
+            <SelectTrigger className="h-10">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -205,39 +210,40 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
 
         {/* Age */}
         <div>
-          <Label htmlFor="age">Age *</Label>
+          <Label htmlFor="age" className="text-sm font-medium">Age *</Label>
           <Input
             id="age"
             type="number"
             placeholder="Enter age"
             value={userData.age || ""}
             onChange={(e) => setUserData(prev => ({ ...prev, age: Number(e.target.value) }))}
+            className="mt-1.5 input-focus"
           />
         </div>
 
         {/* Gender */}
         <div>
-          <Label>Gender *</Label>
+          <Label className="text-sm font-medium">Gender *</Label>
           <RadioGroup
             value={userData.gender}
             onValueChange={(value: "male" | "female") => setUserData(prev => ({ ...prev, gender: value }))}
             className="flex gap-6 mt-2"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="male" id="male" />
-              <Label htmlFor="male">Male</Label>
+              <RadioGroupItem value="male" id="male" className="border-primary/30" />
+              <Label htmlFor="male" className="cursor-pointer">Male</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="female" id="female" />
-              <Label htmlFor="female">Female</Label>
+              <RadioGroupItem value="female" id="female" className="border-primary/30" />
+              <Label htmlFor="female" className="cursor-pointer">Female</Label>
             </div>
           </RadioGroup>
         </div>
 
         {/* Goal */}
         <div>
-          <Label className="flex items-center gap-2">
-            <Target className="h-4 w-4" />
+          <Label className="flex items-center gap-2 text-sm font-medium">
+            <Target className="h-4 w-4 text-primary" />
             Fitness Goal *
           </Label>
           <Select value={userData.goal} onValueChange={(value: "lose" | "gain" | "maintain") => setUserData(prev => ({ ...prev, goal: value }))}>
@@ -254,75 +260,71 @@ const FitnessCalculator = ({ onCalculate }: FitnessCalculatorProps) => {
 
         {/* Workout Frequency */}
         <div>
-          <Label className="flex items-center gap-2">
-            <Activity className="h-4 w-4" />
-            Weekly Workout Frequency
+          <Label className="flex items-center gap-2 text-sm font-medium">
+            <Activity className="h-4 w-4 text-primary" />
+            Weekly Workout Frequency *
           </Label>
-          <Select 
-            value={userData.workoutFrequency.toString()} 
-            onValueChange={(value) => setUserData(prev => ({ ...prev, workoutFrequency: Number(value) }))}
-          >
+          <Select value={userData.workoutFrequency.toString()} onValueChange={(value) => setUserData(prev => ({ ...prev, workoutFrequency: Number(value) }))}>
             <SelectTrigger className="mt-2">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="0">Sedentary (no exercise)</SelectItem>
-              <SelectItem value="1">1 time per week</SelectItem>
-              <SelectItem value="2">2 times per week</SelectItem>
-              <SelectItem value="3">3 times per week</SelectItem>
-              <SelectItem value="4">4 times per week</SelectItem>
-              <SelectItem value="5">5 times per week</SelectItem>
-              <SelectItem value="6">6 times per week</SelectItem>
-              <SelectItem value="7">7 times per week</SelectItem>
+              <SelectItem value="0">Sedentary (No exercise)</SelectItem>
+              <SelectItem value="1">1-2 times/week</SelectItem>
+              <SelectItem value="3">3-4 times/week</SelectItem>
+              <SelectItem value="5">5-6 times/week</SelectItem>
+              <SelectItem value="7">7+ times/week</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Cuisine Preference */}
+        <div>
+          <Label className="text-sm font-medium">Preferred Cuisine</Label>
+          <Select value={userData.cuisine} onValueChange={(value: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed") => setUserData(prev => ({ ...prev, cuisine: value }))}>
+            <SelectTrigger className="mt-2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="mediterranean">Mediterranean</SelectItem>
+              <SelectItem value="asian">Asian</SelectItem>
+              <SelectItem value="american">American</SelectItem>
+              <SelectItem value="middle-eastern">Middle Eastern</SelectItem>
+              <SelectItem value="mixed">Mixed</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Language */}
         <div>
-          <Label>Language</Label>
+          <Label className="text-sm font-medium">Preferred Language</Label>
           <Select value={userData.language} onValueChange={(value: "en" | "he") => setUserData(prev => ({ ...prev, language: value }))}>
             <SelectTrigger className="mt-2">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
-              <SelectItem value="he">עברית</SelectItem>
+              <SelectItem value="he">Hebrew</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Cuisine */}
-        <div>
-          <Label>Cuisine Preference</Label>
-          <Select value={userData.cuisine} onValueChange={(value: "mediterranean" | "asian" | "american" | "middle-eastern" | "mixed") => setUserData(prev => ({ ...prev, cuisine: value }))}>
-            <SelectTrigger className="mt-2">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="mixed">Mixed International</SelectItem>
-              <SelectItem value="mediterranean">Mediterranean</SelectItem>
-              <SelectItem value="asian">Asian</SelectItem>
-              <SelectItem value="american">American</SelectItem>
-              <SelectItem value="middle-eastern">Middle Eastern</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Kosher Dietary Preference */}
-        <div className="flex items-center space-x-2">
-          <Checkbox 
-            id="kosher" 
+        {/* Kosher Option */}
+        <div className="flex items-center space-x-2 pt-2">
+          <Checkbox
+            id="kosher"
             checked={userData.isKosher}
             onCheckedChange={(checked) => setUserData(prev => ({ ...prev, isKosher: checked as boolean }))}
+            className="border-primary/30"
           />
-          <Label htmlFor="kosher" className="text-sm">
-            {userData.language === "he" ? "תזונה כשרה (ללא חזיר, פירות ים, ומניעת ערבוב בשר וחלב)" : "Kosher Diet (No pork, seafood, or mixing meat with dairy)"}
-          </Label>
+          <Label htmlFor="kosher" className="text-sm font-medium cursor-pointer">Kosher Diet</Label>
         </div>
 
-        <Button onClick={handleCalculate} className="w-full" size="lg">
-          {userData.language === "he" ? "חשב וצור תכנית תזונה" : "Calculate & Generate Meal Plan"}
+        <Button 
+          onClick={handleCalculate}
+          className="w-full h-12 text-lg font-semibold button-hover"
+        >
+          Calculate My Plan
         </Button>
       </CardContent>
     </Card>
